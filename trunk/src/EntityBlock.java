@@ -1,18 +1,24 @@
-
-class EntityBlock
-{
+class EntityBlock {
     NameBlock name;
     EntityKind kind;
     int nestingLevel;
     EntityBlock sameName;
     EntityBlock sameScope;
     
-    public EntityBlock()
-    {
+    public EntityBlock() {
     	super();
     	this.name	= null;
     	this.kind	= null;
     	this.nestingLevel	= 0;
+    	this.sameName	= null;
+    	this.sameScope	= null;
+    }
+    
+    public EntityBlock(NameBlock name, EntityKind kind, int nestingLevel) {
+    	super();
+    	this.name	= name;
+    	this.kind	= kind;
+    	this.nestingLevel	= nestingLevel;
     	this.sameName	= null;
     	this.sameScope	= null;
     }
@@ -39,5 +45,21 @@ class EntityBlock
 
 	public void setNestingLevel(int nestingLevel) {
 		this.nestingLevel = nestingLevel;
+	}
+
+	public EntityBlock getSameName() {
+		return sameName;
+	}
+
+	public void setSameName(EntityBlock sameName) {
+		this.sameName = sameName;
+	}
+
+	public EntityBlock getSameScope() {
+		return sameScope;
+	}
+
+	public void setSameScope(EntityBlock sameScope) {
+		this.sameScope = sameScope;
 	}
 }

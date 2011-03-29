@@ -1,5 +1,4 @@
-class NameBlock
-{
+class NameBlock {
     String id;
     EntityBlock entity;
     NameBlock next;
@@ -18,8 +17,7 @@ class NameBlock
 		this.next	= null;
 	}
 
-	public NameBlock(String id, EntityBlock entity, NameBlock next)
-    {
+	public NameBlock(String id, EntityBlock entity, NameBlock next) {
 		super();
     	this.id	= id;
     	this.entity	= entity;
@@ -48,13 +46,5 @@ class NameBlock
 	
 	public void setNext(NameBlock next) {
 		this.next	= next;
-	}
-
-	public void addEntity(EntityBlock entity)
-	{
-		EntityBlock tempEntity	= this.entity;
-		
-		this.entity	= entity;
-		this.entity.sameName	= tempEntity;
 	}
 }

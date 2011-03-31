@@ -1,13 +1,16 @@
+import java.awt.Cursor;
 import java.util.Vector;
 
 
 class SymbolTable {
-	Vector<EntityBlock> scopeStack;
+	//Vector<EntityBlock> scopeStack;
+	ScopeTree	scopeTree;
 	NameTable nameTable;
 	
     public SymbolTable() {
     	super();
-    	this.scopeStack	= new Vector<EntityBlock>();
+    	//this.scopeStack	= new Vector<EntityBlock>();
+    	this.scopeTree	= new ScopeTree();
     	this.nameTable	= new NameTable();
     }
 
@@ -28,9 +31,10 @@ class SymbolTable {
         		}
         		
         		if (latestEntity != null) {
-        			EntityBlock topEntity	= this.scopeStack.lastElement();
+        			//EntityBlock topEntity	= this.scopeStack.lastElement();
         			
-        			if (topEntity.getNestingLevel() == latestEntity.getNestingLevel()) {
+        			//if (topEntity.getNestingLevel() == latestEntity.getNestingLevel()) {
+        			if (latestEntity.getNestingLevel() == this.scopeTree.getCurScope().getNestingLevel()) {
         				scope	= 1;
         				System.out.println(id + " with the type " + EntityKind.getKindStr(kind) + " exists and is in current scope");
         				this.print();
@@ -53,15 +57,16 @@ class SymbolTable {
     
     public EntityBlock insert(String id, EntityKind kind) {
     	NameBlock name	= this.nameTable.name2nameBlock(id);
-        EntityBlock newEntityBlock = new EntityBlock(name, kind, this.scopeStack.lastElement().getNestingLevel());
+    	
+        EntityBlock newEntityBlock = new EntityBlock(name, kind, this.scopeTree.getCurScope().getNestingLevel());//this.scopeStack.lastElement().getNestingLevel());
         EntityBlock tempEntityBlock	= name.getEntity();
-        
         newEntityBlock.setSameName(tempEntityBlock);
         name.setEntity(newEntityBlock);
         
-        tempEntityBlock	= this.scopeStack.lastElement().getSameScope();
+        tempEntityBlock	= this.scopeTree.getCurScope().getRecentEntity();//this.scopeStack.lastElement().getSameScope();
         newEntityBlock.setSameScope(tempEntityBlock);
-        this.scopeStack.lastElement().setSameScope(newEntityBlock);
+        //this.scopeStack.lastElement().setSameScope(newEntityBlock);
+        this.scopeTree.getCurScope().setRecentEntity(newEntityBlock);
         
         System.out.println(id + " with the type " + EntityKind.getKindStr(kind) + " have inserted succefully");
         this.print();
@@ -69,25 +74,33 @@ class SymbolTable {
     }
 
     public void enterBlock() {
-    	EntityBlock newEntityBlock	= new EntityBlock();
     	int nestingLevel	= 0;
     	
-    	if (this.scopeStack.size() != 0) {
+    	/*if (this.scopeStack.size() != 0) {
     		nestingLevel	= this.scopeStack.lastElement().getNestingLevel()+1;
-    	}
+    	}*/
     	
-    	newEntityBlock.setNestingLevel(nestingLevel);
-    	this.scopeStack.add(newEntityBlock);
+    	if (this.scopeTree.getCurScope().getNestingLevel() != -1) {
+    		//Add new TreeNode
+    		TreeNode newScope	= new TreeNode();
+    		nestingLevel	= this.scopeTree.getCurScope().getNestingLevel() + 1;
+    		newScope.setParentNode(this.scopeTree.getCurScope());
+    		this.scopeTree.setCurScope(newScope);
+    	}
+
+    	this.scopeTree.getCurScope().setNestingLevel(nestingLevel);
+    	
+    	//this.scopeStack.add(newEntityBlock);
     	
     	System.out.println("Enter block " + nestingLevel);
     	this.print();
     }
 
     public void leaveBlock() {
-    	EntityBlock entity	= this.scopeStack.remove(this.scopeStack.size() - 1);
-    	int nestingLevel	= entity.getNestingLevel();
+    	EntityBlock entity	= this.scopeTree.getCurScope().getRecentEntity();//this.scopeStack.remove(this.scopeStack.size() - 1);
+    	int nestingLevel	= this.scopeTree.getCurScope().getNestingLevel();//entity.getNestingLevel();
     	EntityBlock	scopeEntity	= null;
-    	entity	= entity.getSameScope();
+    	//entity	= entity.getSameScope();
     	
     	while (entity != null) {
     		scopeEntity	= entity;
@@ -101,6 +114,8 @@ class SymbolTable {
     		entity	= entity.getSameScope();
     	}
     	
+    	this.scopeTree.setCurScope(this.scopeTree.getCurScope().getParentNode());
+    	
     	System.out.println("Leave block " + nestingLevel);
     	this.print();
     }
@@ -109,15 +124,18 @@ class SymbolTable {
     	System.out.println("Symbol Table");
     	System.out.println("Name Kind  level");
     	
-    	for (int index = this.scopeStack.size()-1; index >= 0; index--) {
-    		EntityBlock entity	= this.scopeStack.get(index);
-    		
-    		entity	= entity.getSameScope();
+    	TreeNode	node	= this.scopeTree.getCurScope();
+    	
+    	//for (int index = this.scopeStack.size()-1; index >= 0; index--) {
+    	while (node != null) {
+    		EntityBlock entity	= node.getRecentEntity();//this.scopeStack.get(index);
+    		//entity	= entity.getSameScope();
     		
     		while (entity != null) {
     			System.out.println(entity.getName().getId() + " " + EntityKind.getKindStr(entity.getKind()) + " " + entity.getNestingLevel());
     			entity	= entity.getSameScope();
     		}
+    		node	= node.getParentNode();
     	}
     }
 }

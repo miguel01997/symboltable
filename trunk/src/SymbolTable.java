@@ -1,3 +1,19 @@
+/** 
+ * CSE 504: Compiler Design
+ * Programming Assignment #3
+ * Symbol Table
+ *
+ * By 
+ *	Amitha Cheluvagopal
+ *	ID# 107569253
+ *	Email: amitha_c@yahoo.com
+ *
+ *	Naresh P Singh
+ *	ID# 107669049
+ *	Email: mail2naresh@gmail.com
+ **/
+
+
 class SymbolTable {
 	ScopeTree	scopeTree;
 	NameTable nameTable;
@@ -8,7 +24,7 @@ class SymbolTable {
     	this.nameTable	= new NameTable();
     }
 
-    public EntityBlock lookup(String id, EntityKind kind, Integer scope) {
+    public EntityBlock lookup(String id, EntityKind kind, MutableInt scope) {
     	if (this.scopeTree.getCurScope() == null) {
     		System.out.println("Invalid lookup encountered.");
     		return null;
@@ -32,12 +48,12 @@ class SymbolTable {
         		if (latestEntity != null) {
         			
         			if (latestEntity.getNestingLevel() == this.scopeTree.getCurScope().getNestingLevel()) {
-        				scope	= 1;
+        				scope.setValue(1);
         				System.out.println(id + " with the type " + EntityKind.getKindStr(kind) + " exists and is in current scope");
         				this.print();
         			}
         			else {
-        				scope	= 0;
+        				scope.setValue(0);
         				System.out.println(id + " with the type " + EntityKind.getKindStr(kind) + " exists and is in other scope");
         				this.print();
         			}

@@ -33,9 +33,7 @@ public class TestSymTable {
 		}
 	}
 	
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		
+	public static void main(String[] args) {		
 		try {
 			TestSymTable testObj	= new TestSymTable();
 			

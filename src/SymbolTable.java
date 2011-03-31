@@ -3,13 +3,11 @@ import java.util.Vector;
 
 
 class SymbolTable {
-	//Vector<EntityBlock> scopeStack;
 	ScopeTree	scopeTree;
 	NameTable nameTable;
 	
     public SymbolTable() {
     	super();
-    	//this.scopeStack	= new Vector<EntityBlock>();
     	this.scopeTree	= new ScopeTree();
     	this.nameTable	= new NameTable();
     }
@@ -31,9 +29,7 @@ class SymbolTable {
         		}
         		
         		if (latestEntity != null) {
-        			//EntityBlock topEntity	= this.scopeStack.lastElement();
         			
-        			//if (topEntity.getNestingLevel() == latestEntity.getNestingLevel()) {
         			if (latestEntity.getNestingLevel() == this.scopeTree.getCurScope().getNestingLevel()) {
         				scope	= 1;
         				System.out.println(id + " with the type " + EntityKind.getKindStr(kind) + " exists and is in current scope");
@@ -58,14 +54,13 @@ class SymbolTable {
     public EntityBlock insert(String id, EntityKind kind) {
     	NameBlock name	= this.nameTable.name2nameBlock(id);
     	
-        EntityBlock newEntityBlock = new EntityBlock(name, kind, this.scopeTree.getCurScope().getNestingLevel());//this.scopeStack.lastElement().getNestingLevel());
+        EntityBlock newEntityBlock = new EntityBlock(name, kind, this.scopeTree.getCurScope().getNestingLevel());
         EntityBlock tempEntityBlock	= name.getEntity();
         newEntityBlock.setSameName(tempEntityBlock);
         name.setEntity(newEntityBlock);
         
-        tempEntityBlock	= this.scopeTree.getCurScope().getRecentEntity();//this.scopeStack.lastElement().getSameScope();
+        tempEntityBlock	= this.scopeTree.getCurScope().getRecentEntity();
         newEntityBlock.setSameScope(tempEntityBlock);
-        //this.scopeStack.lastElement().setSameScope(newEntityBlock);
         this.scopeTree.getCurScope().setRecentEntity(newEntityBlock);
         
         System.out.println(id + " with the type " + EntityKind.getKindStr(kind) + " have inserted succefully");
@@ -75,10 +70,6 @@ class SymbolTable {
 
     public void enterBlock() {
     	int nestingLevel	= 0;
-    	
-    	/*if (this.scopeStack.size() != 0) {
-    		nestingLevel	= this.scopeStack.lastElement().getNestingLevel()+1;
-    	}*/
     	
     	if (this.scopeTree.getCurScope().getNestingLevel() != -1) {
     		//Add new TreeNode
@@ -90,17 +81,14 @@ class SymbolTable {
 
     	this.scopeTree.getCurScope().setNestingLevel(nestingLevel);
     	
-    	//this.scopeStack.add(newEntityBlock);
-    	
     	System.out.println("Enter block " + nestingLevel);
     	this.print();
     }
 
     public void leaveBlock() {
-    	EntityBlock entity	= this.scopeTree.getCurScope().getRecentEntity();//this.scopeStack.remove(this.scopeStack.size() - 1);
-    	int nestingLevel	= this.scopeTree.getCurScope().getNestingLevel();//entity.getNestingLevel();
+    	EntityBlock entity	= this.scopeTree.getCurScope().getRecentEntity();
+    	int nestingLevel	= this.scopeTree.getCurScope().getNestingLevel();
     	EntityBlock	scopeEntity	= null;
-    	//entity	= entity.getSameScope();
     	
     	while (entity != null) {
     		scopeEntity	= entity;
@@ -126,10 +114,8 @@ class SymbolTable {
     	
     	TreeNode	node	= this.scopeTree.getCurScope();
     	
-    	//for (int index = this.scopeStack.size()-1; index >= 0; index--) {
     	while (node != null) {
-    		EntityBlock entity	= node.getRecentEntity();//this.scopeStack.get(index);
-    		//entity	= entity.getSameScope();
+    		EntityBlock entity	= node.getRecentEntity();
     		
     		while (entity != null) {
     			System.out.println(entity.getName().getId() + " " + EntityKind.getKindStr(entity.getKind()) + " " + entity.getNestingLevel());

@@ -1,7 +1,3 @@
-import java.awt.Cursor;
-import java.util.Vector;
-
-
 class SymbolTable {
 	ScopeTree	scopeTree;
 	NameTable nameTable;
@@ -13,6 +9,11 @@ class SymbolTable {
     }
 
     public EntityBlock lookup(String id, EntityKind kind, Integer scope) {
+    	if (this.scopeTree.getCurScope() == null) {
+    		System.out.println("Invalid lookup encountered.");
+    		return null;
+    	}
+    	
         if (this.nameTable.exits(id)) {
         	NameBlock name = this.nameTable.name2nameBlock(id);
         	
@@ -52,6 +53,11 @@ class SymbolTable {
     }
     
     public EntityBlock insert(String id, EntityKind kind) {
+    	if (this.scopeTree.getCurScope() == null) {
+    		System.out.println("Invalid insert encountered.");
+    		return null;
+    	}
+    	
     	NameBlock name	= this.nameTable.name2nameBlock(id);
     	
         EntityBlock newEntityBlock = new EntityBlock(name, kind, this.scopeTree.getCurScope().getNestingLevel());
@@ -71,21 +77,27 @@ class SymbolTable {
     public void enterBlock() {
     	int nestingLevel	= 0;
     	
-    	if (this.scopeTree.getCurScope().getNestingLevel() != -1) {
+    	if (this.scopeTree.getCurScope() != null) {
     		//Add new TreeNode
     		TreeNode newScope	= new TreeNode();
     		nestingLevel	= this.scopeTree.getCurScope().getNestingLevel() + 1;
     		newScope.setParentNode(this.scopeTree.getCurScope());
     		this.scopeTree.setCurScope(newScope);
     	}
+    	else {
+    		this.scopeTree.setCurScope(this.scopeTree.getRootScope());
+    	}
 
     	this.scopeTree.getCurScope().setNestingLevel(nestingLevel);
-    	
     	System.out.println("Enter block " + nestingLevel);
     	this.print();
     }
 
     public void leaveBlock() {
+    	if (this.scopeTree.getCurScope() == null) {
+    		System.out.println("Invalid Leave Scope encountered.");
+    		return;
+    	}
     	EntityBlock entity	= this.scopeTree.getCurScope().getRecentEntity();
     	int nestingLevel	= this.scopeTree.getCurScope().getNestingLevel();
     	EntityBlock	scopeEntity	= null;
@@ -108,7 +120,16 @@ class SymbolTable {
     	this.print();
     }
     
-    public void print() {
+    public boolean getStatus() {
+    	if (this.scopeTree.getCurScope() == null) {
+    		return true;
+    	}
+    	else {
+    		return false;
+    	}
+    }
+    
+    private void print() {
     	System.out.println("Symbol Table");
     	System.out.println("Name Kind  level");
     	

@@ -2,7 +2,6 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 
-
 public class TestSymTable {
 
 	/**
@@ -12,6 +11,10 @@ public class TestSymTable {
 	
 	public TestSymTable() {
 		this.symTable	= new SymbolTable();
+	}
+	
+	public SymbolTable getSymTable() {
+		return this.symTable;
 	}
 	
 	public void callFunction(String line) {
@@ -43,6 +46,13 @@ public class TestSymTable {
 				while (reader.ready()) {
 					testObj.callFunction(reader.readLine());
 					System.out.println("");
+				}
+				
+				if (testObj.getSymTable().getStatus()) {
+					System.out.println("Parsing Successful.");
+				}
+				else {
+					System.out.println("Parsing Failed.");
 				}
 			}
 			catch (FileNotFoundException e) {

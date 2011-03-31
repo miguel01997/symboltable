@@ -1,12 +1,10 @@
-
 public class ScopeTree {
 	TreeNode	rootScope;
 	TreeNode 	curScope;
 	
 	public ScopeTree() {
 		this.rootScope	= new TreeNode();
-		this.curScope	= rootScope;
-		this.rootScope.setNestingLevel(-1);
+		this.curScope	= null;
 	}
 
 	public TreeNode getRootScope() {

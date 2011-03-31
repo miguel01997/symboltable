@@ -22,9 +22,9 @@ public class DecafParser {
 		
 		if (splitString.length > 0) {
 			if (splitString [0].equalsIgnoreCase("lookup")) {
-				Integer scope = -1;
+				MutableInt scope = new MutableInt();
 				this.symTable.lookup(splitString [1], EntityKind.getKind(splitString [2].trim()), scope);
-				System.out.println("Lookup returned: " + scope);
+                System.out.println("Lookup: " + scope);
 			}
 			else if (splitString [0].equalsIgnoreCase("insert")) {
 				this.symTable.insert(splitString [1], EntityKind.getKind(splitString [2].trim()));

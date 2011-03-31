@@ -69,7 +69,7 @@ class SymbolTable {
         newEntityBlock.setSameScope(tempEntityBlock);
         this.scopeTree.getCurScope().setRecentEntity(newEntityBlock);
         
-        System.out.println(id + " with the type " + EntityKind.getKindStr(kind) + " have inserted succefully");
+        System.out.println(id + " with the type " + EntityKind.getKindStr(kind) + " have inserted successfully");
         this.print();
         return newEntityBlock;
     }

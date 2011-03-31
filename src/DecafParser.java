@@ -1,3 +1,18 @@
+/** 
+ * CSE 504: Compiler Design
+ * Programming Assignment #3
+ * Symbol Table
+ *
+ * By 
+ *	Amitha Cheluvagopal
+ *	ID# 107569253
+ *	Email: amitha_c@yahoo.com
+ *
+ *	Naresh P Singh
+ *	ID# 107669049
+ *	Email: mail2naresh@gmail.com
+ **/
+
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -22,9 +37,8 @@ public class DecafParser {
 		
 		if (splitString.length > 0) {
 			if (splitString [0].equalsIgnoreCase("lookup")) {
-				MutableInt scope = new MutableInt();
+				MutableInt scope = new MutableInt(-1);
 				this.symTable.lookup(splitString [1], EntityKind.getKind(splitString [2].trim()), scope);
-                System.out.println("Lookup: " + scope);
 			}
 			else if (splitString [0].equalsIgnoreCase("insert")) {
 				this.symTable.insert(splitString [1], EntityKind.getKind(splitString [2].trim()));

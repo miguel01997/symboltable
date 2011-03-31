@@ -18,7 +18,6 @@
  * Contributors:
  *     Makoto YUI - initial implementation
  */
-package xbird.util.primitives;
 
 import java.io.Externalizable;
 import java.io.IOException;
